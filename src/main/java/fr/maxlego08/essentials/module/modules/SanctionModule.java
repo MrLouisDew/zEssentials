@@ -393,8 +393,13 @@ public class SanctionModule extends ZModule {
     }
 
     private void sendOffline(CommandSender sender, UserRecord record) {
-        message(sender, Message.COMMAND_SEEN_OFFLINE, "%player%", record.userDTO().name(), "%date%", this.simpleDateFormat.format(record.userDTO().updated_at()));
-        message(sender, Message.COMMAND_SEEN_PLAYTIME, "%playtime%", TimerBuilder.getStringTime(record.userDTO().play_time() * 1000));
+        UserDTO userDTO = record.userDTO();
+        Date updatedAt = userDTO.updated_at();
+        String dateString = (updatedAt != null) 
+                            ? this.simpleDateFormat.format(updatedAt) 
+                            : "Unknown"; // Replace "Unknown" with a suitable message key if needed
+        message(sender, Message.COMMAND_SEEN_OFFLINE, "%player%", userDTO.name(), "%date%", dateString);
+        message(sender, Message.COMMAND_SEEN_PLAYTIME, "%playtime%", TimerBuilder.getStringTime(userDTO.play_time() * 1000));
     }
 
     public void seen(CommandSender sender, String ip) {
